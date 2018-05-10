@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "# Install\n# install.packages(\"tm\")  # for text mining\n# install.packages(\"SnowballC\") # for text stemming\n# install.packages(\"wordcloud\") # word-cloud generator \n# install.packages(\"RColorBrewer\") # color palettes\n# Load\nlibrary(\"tm\")\nlibrary(\"SnowballC\")\nlibrary(\"wordcloud\")\nlibrary(\"RColorBrewer\")\n\n# Read the text file\nfilePath <- \"rawdata/budgetspeech2014.txt\"\ntext <- readLines(filePath)\n# Load the data as a corpus\ndocs <- Corpus(VectorSource(text))\ninspect(docs)\ntoSpace <- content_transformer(function (x , pattern ) gsub(pattern, \" \", x))\ndocs <- tm_map(docs, toSpace, \"/\")\ndocs <- tm_map(docs, toSpace, \"@\")\ndocs <- tm_map(docs, toSpace, \"\\\\|\")\n\n# Convert the text to lower case\ndocs <- tm_map(docs, content_transformer(tolower))\n# Remove numbers\ndocs <- tm_map(docs, removeNumbers)\n# Remove english common stopwords\ndocs <- tm_map(docs, removeWords, stopwords(\"english\"))\n# Remove your own stop word\n# specify your stopwords as a character vector\ndocs <- tm_map(docs, removeWords, c(\"will\", \"crore\", \"propos\", \"year\", \"lakh\", \"also\", \"india\", \"propose\",\"now\",\"crores\",\n                                    \"lakhs\",\"years\",\"provide\",\"provided\",\"new\",\"tax\",\"government\",\"percent\",\"sum\",\"set\",\n                                    \"sector\",\"purpose\",\"madam\",\"speaker\",\"budget\",\"made\",\"areas\",\"give\",\"well\",\"will\",\"crore\",\n                                    \"proposed\",\"per\",\"like\",\"input\",\"address\",\"two\",\"taken\",\"take\",\"income\",\"last\",\n                                    \"various\",\"focus\",\"can\",\"use\",\"get\",\"due\",\"create\",\"must\",\"used\",\"called\",\"start\",\n                                    \"intend\",\"within\",\"allow\",\"view\",\"start\",\"back\",\"towards\",\"several\",\n                                    \"may\",\"certain\",\"make\",\"without\",\"enable\",\"including\",\"one\",\"need\",\"encourage\",\n                                    \"therefore\",\"cases\",\"case\",\"next\",\"number\",\"act\",\"reduce\",\"\")) \n# Remove punctuations\ndocs <- tm_map(docs, removePunctuation)\n# Eliminate extra white spaces\ndocs <- tm_map(docs, stripWhitespace)\n# Text stemming\n# docs <- tm_map(docs, stemDocument)\n\ndtm <- TermDocumentMatrix(docs)\nm <- as.matrix(dtm)\nv <- sort(rowSums(m),decreasing=TRUE)\nd <- data.frame(word = names(v),freq=v)\nhead(d, 10)\n\n\n\nset.seed(1234)\nwordcloud(words = d$word, freq = d$freq, min.freq = 1,\n          max.words=50, random.order=FALSE, rot.per=0.35, \n          colors=brewer.pal(8, \"Dark2\"))\n\n\nrm(d,m,docs,dtm,filePath,text,v,toSpace)\n",
+    "created" : 1486027571446.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3507328355",
+    "id" : "7BC7BDFD",
+    "lastKnownWriteTime" : 1486115808,
+    "last_content_update" : 1486115808190,
+    "path" : "C:/Users/admin/ProProjects/Budget/budget_word_cloud.R",
+    "project_path" : "budget_word_cloud.R",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
